@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>scribble-scripts-raw | Enterprise CDN Storage Node</title>
+    <title>scribble-code | Enterprise Vercel CDN Node</title>
     <style>
         :root {
             --bg-base: #020408;
@@ -13,7 +13,6 @@
             --accent: #6366f1;
             --accent-hover: #4f46e5;
             --accent-glow: rgba(99, 102, 241, 0.4);
-            --danger: #ef4444;
             --success: #22c55e;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -28,7 +27,7 @@
 
         .container { max-width: 1000px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
 
-        header { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.15)); border: 1px solid var(--border); border-radius: 20px; padding: 36px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); backdrop-filter: blur(12px); }
+        header { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.15)); border: 1px solid var(--border); border-radius: 20px; padding: 36px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
         h1 { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; color: var(--text-main); margin-bottom: 8px; }
         .subtitle { font-size: 15px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
 
@@ -55,127 +54,92 @@
         .metric-box { background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
         .metric-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; }
         .metric-val { font-size: 22px; font-weight: 900; }
-
-        .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
         .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; background-color: var(--bg-hover); border: 1px solid var(--border); color: var(--success); font-weight: 700; }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
     <div class="container">
         <header>
             <h1>yo tengo tengo yo to the tengo tengo yo</h1>
-            <div class="subtitle">Raw Scripts Here.</div>
+            <div class="subtitle">Scribble Code Serverless CDN Node</div>
         </header>
 
         <div class="metrics-bar">
             <div class="metric-box">
-                <span class="metric-title">Active CDN Endpoints</span>
-                <span class="metric-val" id="cdnCount">1</span>
+                <span class="metric-title">Cached Local Endpoints</span>
+                <span class="metric-val" id="cdnCount">0</span>
             </div>
             <div class="metric-box">
                 <span class="metric-title">Storage Node Status</span>
-                <span class="metric-val" style="color: var(--success); font-size: 18px;">SYNCHRONIZED</span>
+                <span class="metric-val" style="color: var(--success); font-size: 18px;">ONLINE & SYNCED</span>
             </div>
             <div class="metric-box">
-                <span class="metric-title">Security Protocol</span>
-                <span class="metric-val" style="color: var(--accent); font-size: 18px;">AES-IMMUTABLE</span>
+                <span class="metric-title">Proxy Engine</span>
+                <span class="metric-val" style="color: var(--accent); font-size: 18px;">VERCEL EDGE</span>
             </div>
         </div>
 
         <div class="card">
             <h2>
-                <span>📁 Synchronized Raw Scripts Repository</span>
-                <span class="badge">VERCEL API SYNC ACTIVE</span>
+                <span>📁 Synchronized Raw Scripts Directory</span>
+                <span class="badge">SERVERLESS ACTIVE</span>
             </h2>
-            <div class="toolbar">
-                <input type="text" class="form-control" id="rawSearchInput" placeholder="Filter active raw endpoints..." oninput="renderRawCDNManager()" style="max-width: 380px;">
-                <button class="btn btn-outline" onclick="forceSyncRefresh()">🔄 Force Refresh Sync</button>
+            <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                <input type="text" class="form-control" id="rawSearchInput" placeholder="Filter active raw endpoints..." oninput="renderDashboard()" style="max-width: 380px;">
+                <button class="btn btn-outline" onclick="loadCachedScripts()">🔄 Refresh Cache</button>
             </div>
             <div class="script-list" id="rawScriptListContainer"></div>
         </div>
     </div>
 
     <script>
-        let rawCDNStorage = JSON.parse(localStorage.getItem('scribble_scripts_v30')) || [
-            { id: 1, directory: "1", title: "Print Test Script", game: "Universal", author: "Scribble513", code: "print('yo tengo tengo yo test')", copies: 0 }
+        let localScripts = JSON.parse(localStorage.getItem('scribble_scripts_v30')) || [
+            { id: "1", title: "Print Test Script", code: "print('yo tengo tengo yo test')" }
         ];
 
         window.onload = function() {
-            try {
-                const savedTheme = localStorage.getItem('scribble_theme_v30') || 'dark';
-                document.body.setAttribute('data-theme', savedTheme);
-                renderRawCDNManager();
-                initCrossTabSync();
-            } catch(e) {
-                console.error("[RawCDN] Initialization error:", e);
-            }
-        }
-
-        function initCrossTabSync() {
-            window.addEventListener('storage', (event) => {
-                if(event.key && event.key.startsWith('scribble_scripts')) {
-                    try {
-                        const parsed = JSON.parse(event.newValue);
-                        if(Array.isArray(parsed)) {
-                            rawCDNStorage = parsed;
-                            renderRawCDNManager();
-                        }
-                    } catch(err) {
-                        console.error("[RawCDN] Sync parse error:", err);
-                    }
-                }
+            renderDashboard();
+            window.addEventListener('storage', () => {
+                localScripts = JSON.parse(localStorage.getItem('scribble_scripts_v30')) || localScripts;
+                renderDashboard();
             });
         }
 
-        function forceSyncRefresh() {
-            for(let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if(key && key.startsWith('scribble_scripts')) {
-                    try {
-                        const data = JSON.parse(localStorage.getItem(key));
-                        if(Array.isArray(data)) {
-                            rawCDNStorage = data;
-                            break;
-                        }
-                    } catch(e) {}
-                }
-            }
-            renderRawCDNManager();
-            alert("Raw CDN storage node successfully refreshed!");
+        function loadCachedScripts() {
+            localScripts = JSON.parse(localStorage.getItem('scribble_scripts_v30')) || localScripts;
+            renderDashboard();
+            alert("CDN Dashboard cache updated successfully!");
         }
 
-        function renderRawCDNManager() {
+        function renderDashboard() {
             const container = document.getElementById('rawScriptListContainer');
-            const searchVal = document.getElementById('rawSearchInput') ? document.getElementById('rawSearchInput').value.toLowerCase() : '';
-            if(!container) return;
+            const searchVal = document.getElementById('rawSearchInput').value.toLowerCase();
             container.innerHTML = '';
 
-            let filtered = rawCDNStorage.filter(s => 
+            const filtered = localScripts.filter(s => 
                 (s.title && s.title.toLowerCase().includes(searchVal)) || 
-                (s.directory && s.directory.toLowerCase().includes(searchVal)) ||
-                (s.game && s.game.toLowerCase().includes(searchVal))
+                (s.id && s.id.toLowerCase().includes(searchVal))
             );
 
             document.getElementById('cdnCount').innerText = filtered.length;
 
             if(filtered.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No raw endpoints available.</p>`;
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No active endpoints found in local storage cache.</p>`;
                 return;
             }
 
             const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
 
             filtered.forEach(s => {
-                const dirName = s.directory || s.id;
-                const endpointUrl = `${baseUrl}api/script/${dirName}`;
+                const endpointUrl = `${baseUrl}api/script/${s.id}`;
                 const loadstringStr = `loadstring(game:HttpGet("${endpointUrl}"))()`;
 
                 const div = document.createElement('div');
                 div.className = 'script-item';
                 div.innerHTML = `
                     <div class="script-info">
-                        <div class="script-title">${s.title} <span style="font-size: 11px; color: var(--accent);">(/api/script/${dirName})</span></div>
+                        <div class="script-title">${s.title} <span style="font-size: 11px; color: var(--accent);">(/api/script/${s.id})</span></div>
                         <div class="script-url">${endpointUrl}</div>
                     </div>
                     <div class="actions">
