@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scribble-scripts-raw | Enterprise CDN Storage Node</title>
+    <style>
+        :root {
+            --bg-base: #020408;
+            --bg-card: #0a0f1d;
+            --bg-input: #101728;
+            --bg-hover: #172138;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --danger: #ef4444;
+            --success: #22c55e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --font-sans: system-ui, -apple-system, sans-serif;
+            --font-mono: ui-monospace, monospace;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+
+        .container { max-width: 1000px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
+
+        header { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(236,72,153,0.15)); border: 1px solid var(--border); border-radius: 20px; padding: 36px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); backdrop-filter: blur(12px); }
+        h1 { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; color: var(--text-main); margin-bottom: 8px; }
+        .subtitle { font-size: 15px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 18px; }
+        .card h2 { font-size: 18px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+
+        .form-control { width: 100%; padding: 12px 16px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); font-size: 13px; outline: none; transition: var(--transition); }
+        .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow); }
+
+        .btn { background-color: var(--accent); color: white; border: none; padding: 11px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 14px var(--accent-glow); display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+        .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--text-muted); box-shadow: none; }
+        .btn-outline:hover { border-color: var(--accent); color: var(--text-main); background-color: var(--bg-hover); }
+
+        .script-list { display: flex; flex-direction: column; gap: 12px; }
+        .script-item { background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; transition: var(--transition); }
+        .script-item:hover { border-color: var(--accent); }
+        .script-info { display: flex; flex-direction: column; gap: 4px; }
+        .script-title { font-size: 15px; font-weight: 800; }
+        .script-url { font-size: 11px; font-family: var(--font-mono); color: var(--accent); }
+
+        .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .metrics-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .metric-box { background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+        .metric-title { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; }
+        .metric-val { font-size: 22px; font-weight: 900; }
+
+        .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; background-color: var(--bg-hover); border: 1px solid var(--border); color: var(--success); font-weight: 700; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="container">
+        <header>
+            <h1>yo tengo tengo yo to the tengo tengo yo</h1>
+            <div class="subtitle">Raw Scripts Here.</div>
+        </header>
+
+        <div class="metrics-bar">
+            <div class="metric-box">
+                <span class="metric-title">Active CDN Endpoints</span>
+                <span class="metric-val" id="cdnCount">1</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-title">Storage Node Status</span>
+                <span class="metric-val" style="color: var(--success); font-size: 18px;">SYNCHRONIZED</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-title">Security Protocol</span>
+                <span class="metric-val" style="color: var(--accent); font-size: 18px;">AES-IMMUTABLE</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span>📁 Synchronized Raw Scripts Repository</span>
+                <span class="badge">VERCEL API SYNC ACTIVE</span>
+            </h2>
+            <div class="toolbar">
+                <input type="text" class="form-control" id="rawSearchInput" placeholder="Filter active raw endpoints..." oninput="renderRawCDNManager()" style="max-width: 380px;">
+                <button class="btn btn-outline" onclick="forceSyncRefresh()">🔄 Force Refresh Sync</button>
+            </div>
+            <div class="script-list" id="rawScriptListContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let rawCDNStorage = JSON.parse(localStorage.getItem('scribble_scripts_v30')) || [
+            { id: 1, directory: "1", title: "Print Test Script", game: "Universal", author: "Scribble513", code: "print('yo tengo tengo yo test')", copies: 0 }
+        ];
+
+        window.onload = function() {
+            try {
+                const savedTheme = localStorage.getItem('scribble_theme_v30') || 'dark';
+                document.body.setAttribute('data-theme', savedTheme);
+                renderRawCDNManager();
+                initCrossTabSync();
+            } catch(e) {
+                console.error("[RawCDN] Initialization error:", e);
+            }
+        }
+
+        function initCrossTabSync() {
+            window.addEventListener('storage', (event) => {
+                if(event.key && event.key.startsWith('scribble_scripts')) {
+                    try {
+                        const parsed = JSON.parse(event.newValue);
+                        if(Array.isArray(parsed)) {
+                            rawCDNStorage = parsed;
+                            renderRawCDNManager();
+                        }
+                    } catch(err) {
+                        console.error("[RawCDN] Sync parse error:", err);
+                    }
+                }
+            });
+        }
+
+        function forceSyncRefresh() {
+            for(let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if(key && key.startsWith('scribble_scripts')) {
+                    try {
+                        const data = JSON.parse(localStorage.getItem(key));
+                        if(Array.isArray(data)) {
+                            rawCDNStorage = data;
+                            break;
+                        }
+                    } catch(e) {}
+                }
+            }
+            renderRawCDNManager();
+            alert("Raw CDN storage node successfully refreshed!");
+        }
+
+        function renderRawCDNManager() {
+            const container = document.getElementById('rawScriptListContainer');
+            const searchVal = document.getElementById('rawSearchInput') ? document.getElementById('rawSearchInput').value.toLowerCase() : '';
+            if(!container) return;
+            container.innerHTML = '';
+
+            let filtered = rawCDNStorage.filter(s => 
+                (s.title && s.title.toLowerCase().includes(searchVal)) || 
+                (s.directory && s.directory.toLowerCase().includes(searchVal)) ||
+                (s.game && s.game.toLowerCase().includes(searchVal))
+            );
+
+            document.getElementById('cdnCount').innerText = filtered.length;
+
+            if(filtered.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No raw endpoints available.</p>`;
+                return;
+            }
+
+            const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+
+            filtered.forEach(s => {
+                const dirName = s.directory || s.id;
+                const endpointUrl = `${baseUrl}api/script/${dirName}`;
+                const loadstringStr = `loadstring(game:HttpGet("${endpointUrl}"))()`;
+
+                const div = document.createElement('div');
+                div.className = 'script-item';
+                div.innerHTML = `
+                    <div class="script-info">
+                        <div class="script-title">${s.title} <span style="font-size: 11px; color: var(--accent);">(/api/script/${dirName})</span></div>
+                        <div class="script-url">${endpointUrl}</div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-outline" style="padding: 8px 14px; font-size: 11px;" onclick="navigator.clipboard.writeText('${endpointUrl}'); alert('Copied raw endpoint URL!');">Copy URL</button>
+                        <button class="btn" style="padding: 8px 14px; font-size: 11px;" onclick="navigator.clipboard.writeText('${loadstringStr}'); alert('Copied loadstring payload!');">Copy Loadstring</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
