@@ -105,61 +105,33 @@
             background: var(--success);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--success);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
         }
 
         .footer-note {
             margin-top: 25px;
             font-size: 11.5px;
             color: var(--text-muted);
-            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>ScribbleCDN // Raw Dispenser</h1>
-        <p>Decentralized script payload distribution network powered by Cloudflare Workers KV.</p>
+        <h1>ScribbleCDN // Vercel Edge</h1>
+        <p>Decentralized script payload distribution network.</p>
         
         <div class="code-box">
-            Endpoint Template:<br>
-            https://backend.amandarhoades2.workers.dev/api/script/[id]
+            CDN Endpoint Format:<br>
+            https://scribble-code.vercel.app/script/[id]
         </div>
 
         <div class="status-indicator">
             <div class="status-dot"></div>
-            <span id="backendStatusText">Checking Cloudflare KV Node...</span>
+            <span>Vercel Proxy Active</span>
         </div>
 
         <div class="footer-note">
-            // AUTHOR: tengo_yo // SECURE STORAGE ACTIVE
+            // AUTHOR: tengo_yo // BACKEND: CLOUDFLARE KV
         </div>
     </div>
-
-    <script>
-        const BACKEND_URL = "https://backend.amandarhoades2.workers.dev";
-
-        async function checkNodeStatus() {
-            const statusEl = document.getElementById('backendStatusText');
-            try {
-                const res = await fetch(BACKEND_URL);
-                if (res.ok) {
-                    statusEl.innerText = "CDN Edge Node Online";
-                } else {
-                    statusEl.innerText = "Node Responded with Error";
-                }
-            } catch (err) {
-                statusEl.innerText = "Node Offline / CORS Protected";
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', checkNodeStatus);
-    </script>
 </body>
-</html
+</html>
