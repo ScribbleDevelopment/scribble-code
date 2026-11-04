@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/script/:id",
+      "destination": "https://backend.amandarhoades2.workers.dev/api/script/:id"
+    }
+  ]
+}
